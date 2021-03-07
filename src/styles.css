@@ -1,0 +1,21 @@
+body {
+    height: 100%;
+}
+.chat-container {
+    padding: 1em;
+}
+.chat-body {
+    height: 70vh;
+    overflow: scroll;
+    padding: 1em;
+}
+.chat-box-wrapper {
+    list-style-type: none;
+    padding: 0;
+}
+.chat-message {
+    border: 1px solid lightgray;
+    padding: 1em;
+    border-radius: 4px;
+    margin-bottom: 1em;
+}

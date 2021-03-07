@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { Col, Row } from 'react-bootstrap'
 
-function App() {
+import Layout from './layout/Layout'
+import { Threads } from './components/Threads'
+import { Messages } from './components/Messages'
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Layout>
+      <div className="chat-wrapper">
+        <Row>
+          <Col md={3}>
+            <Threads />
+          </Col>
+          <Col md={9}>
+            <Messages />
+          </Col>
+        </Row>
+      </div>
+    </Layout>
+  )
 }
 
 export default App;
