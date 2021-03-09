@@ -1,77 +1,99 @@
+import { useState, useRef, useEffect } from 'react'
 import { Card, Form, Media } from 'react-bootstrap'
 
-const Messages = () => {
+const currentUserId = 75
+
+const Messages = ({ messages, onSendMessage, activeThread }) => {
+    const [message, setMessage] = useState('')
+    const messageEndRef = useRef()
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [messages])
+
+    const scrollToBottom = () => {
+        if (messageEndRef.current) {
+            messageEndRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'end',
+                inline: 'nearest'
+            })
+        }
+    }
+
+    const handleInputChange = ({ target }) => {
+        setMessage(target.value)
+    }
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault()
+        if (message) {
+            onSendMessage(message)
+            setMessage('')
+            scrollToBottom()
+        }
+    }
+
     return (
         <Card>
             <Card.Header>
-                <span className="align-bottom">John Doe</span>
+                <span>Messages</span>
                 <a href="#" className="float-right">Delete</a>
             </Card.Header>
             <Card.Body className="chat-body">
                 <ul className="chat-box-wrapper">
-                    <li className="chat-message">
-                        <Media className="message">
-                            <img
-                                width={64}
-                                height={64}
-                                className="mr-3"
-                                src="https://via.placeholder.com/64"
-                                alt="Generic placeholder"
-                            />
-                            <Media.Body>
-                                <p className="m-0">
-                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at,
-                                tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla.
-                                Donec lacinia congue felis in faucibus.
-                                </p>
-                            </Media.Body>
-                        </Media>
-                    </li>
-                    <li className="chat-message">
-                        <Media className="message">
-                            <Media.Body>
-                                <p className="m-0">
-                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at,
-                                tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla.
-                                Donec lacinia congue felis in faucibus.
-                                </p>
-                            </Media.Body>
-                            <img
-                                width={64}
-                                height={64}
-                                className="ml-3"
-                                src="https://via.placeholder.com/64"
-                                alt="Generic placeholder"
-                            />
-                        </Media>
-                    </li>
-                    <li className="chat-message">
-                        <Media className="message">
-                            <img
-                                width={64}
-                                height={64}
-                                className="mr-3"
-                                src="https://via.placeholder.com/64"
-                                alt="Generic placeholder"
-                            />
-                            <Media.Body>
-                                <p className="m-0">
-                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at,
-                                tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla.
-                                Donec lacinia congue felis in faucibus.
-                                </p>
-                            </Media.Body>
-                        </Media>
-                    </li>
+                    {
+                        messages.map(message => (
+                            <li className="chat-message" key={message.id}>
+                                <Media className="message">
+                                    {
+                                        currentUserId !== Number(message.uid)
+                                            ?
+                                            (
+                                                <img
+                                                    width={64}
+                                                    height={64}
+                                                    className="mr-3"
+                                                    src="https://via.placeholder.com/64"
+                                                    alt="Generic placeholder"
+                                                />
+                                            )
+                                            : null
+                                    }
+                                    <Media.Body>
+                                        <p className="m-0">{ message.message }</p>
+                                    </Media.Body>
+                                    {
+                                        currentUserId === Number(message.uid)
+                                            ?
+                                            (
+                                                <img
+                                                    width={64}
+                                                    height={64}
+                                                    className="ml-3"
+                                                    src="https://via.placeholder.com/64"
+                                                    alt="Generic placeholder"
+                                                />
+                                            )
+                                            : null
+                                    }
+                                </Media>
+                            </li>
+                        ))
+                    }
                 </ul>
+                <div ref={messageEndRef}></div>
             </Card.Body>
             <Card.Footer>
-                <Form>
+                <Form onSubmit={handleFormSubmit}>
                     <Form.Group controlId="formBasicEmail" className="m-0">
-                        <Form.Control type="email" placeholder="Type message and hit enter" />
+                        <Form.Control
+                            type="text"
+                            name="message"
+                            placeholder="Type message and hit enter"
+                            onChange={handleInputChange}
+                            value={message}
+                        />
                     </Form.Group>
                 </Form>
             </Card.Footer>
